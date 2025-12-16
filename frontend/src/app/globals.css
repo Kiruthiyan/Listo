@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-hover: hsl(var(--primary-hover));
+  --color-primary-soft: hsl(var(--primary-soft));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  /* Default radius mapping */
+  --radius-radius: var(--radius);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-hover: var(--shadow-hover);
+}
+
+@layer base {
+  :root {
+    /* Brand - Sky Blue Premium */
+    --primary: 199 89% 48%;
+    --primary-hover: 199 89% 42%;
+    --primary-soft: 199 89% 96%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Text */
+    --foreground: 222 47% 11%;
+    /* Slate-900 */
+    --muted-foreground: 215 16% 47%;
+
+    /* Surfaces */
+    --background: 0 0% 100%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --secondary: 210 40% 96%;
+    /* Slate-100 */
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+
+    /* Feedback */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* Borders */
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 199 89% 48%;
+
+    /* Radius */
+    --radius-sm: 0.375rem;
+    --radius: 0.625rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+
+    /* Shadows */
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .dark {
+    /* Dark Mode - Consistent with Light Mode Brand but Dark Surfaces */
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 10%;
+    --card-foreground: 210 40% 98%;
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+    /* Darker shadow for dark mode */
+    --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+    --popover: 222 47% 10%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 199 89% 48%;
+    /* Keep Brand Color */
+    --primary-hover: 199 89% 42%;
+    --primary-soft: 199 89% 15%;
+    /* Darker soft for dark mode */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 199 89% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
