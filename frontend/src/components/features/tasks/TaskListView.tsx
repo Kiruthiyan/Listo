@@ -4,12 +4,7 @@ import { Task, SubTask } from '@/types/task';
 import { format, isPast } from 'date-fns';
 import { Calendar, Check, ChevronDown, ChevronRight, Clock, MoreVertical, Pencil, Trash2, AlertCircle, CalendarIcon, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
 import SubtaskList from './SubtaskList';
@@ -24,9 +19,9 @@ interface TaskListViewProps {
 }
 
 export default function TaskListView({ tasks, onUpdateStatus, onDelete, onEdit, onUpdate }: TaskListViewProps) {
-    const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
+    const [expandedTasks, setExpandedTasks] = useState<Set<string>>(new Set());
 
-    const toggleExpand = (taskId: number) => {
+    const toggleExpand = (taskId: string) => {
         const newSet = new Set(expandedTasks);
         if (newSet.has(taskId)) newSet.delete(taskId);
         else newSet.add(taskId);
