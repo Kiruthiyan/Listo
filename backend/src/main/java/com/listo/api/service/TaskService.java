@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.listo.api.dto.TaskStatisticsDTO;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -100,5 +101,53 @@ public class TaskService {
                                 .build())
                         .collect(Collectors.toList()))
                 .build();
+    }
+
+    public TaskStatisticsDTO getTaskStatistics(String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        UUID userId = user.getId();
+
+        List<Task> allTasks = taskRepository.findByUserId(userId);
+
+        long total = allTasks.size();
+        long completed = allTasks.stream().filter(t -> t.getStatus() == com.listo.api.entity.TaskStatus.DONE).count();
+        long pending = total - completed;
+
+        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+        java.time.LocalDate todayDate = java.time.LocalDate.now();
+
+        long overdue = allTasks.stream().filter(t -> t.getStatus() != com.listo.api.entity.TaskStatus.DONE
+                && t.getDueDate() != null && t.getDueDate().isBefore(now)).count();
+        long today = allTasks.stream()
+                .filter(t -> t.getDueDate() != null && t.getDueDate().toLocalDate().isEqual(todayDate)).count();
+        long thisWeek = allTasks.stream().filter(t -> t.getDueDate() != null && isThisWeek(t.getDueDate())).count();
+        long exams = allTasks.stream().filter(t -> (t.getTitle() != null && t.getTitle().toLowerCase().contains("exam"))
+                || (t.getSubject() != null && t.getSubject().toLowerCase().contains("exam"))).count();
+
+        // Priority Breakdown (Map Enum to String)
+        java.util.Map<String, Long> priorityMap = allTasks.stream()
+                .collect(Collectors.groupingBy(t -> t.getPriority().name(), Collectors.counting()));
+
+        return TaskStatisticsDTO.builder()
+                .totalTasks(total)
+                .completedTasks(completed)
+                .pendingTasks(pending)
+                .overdueTasks(overdue)
+                .dueToday(today)
+                .dueThisWeek(thisWeek)
+                .examCount(exams)
+                .priorityBreakdown(priorityMap)
+                .build();
+    }
+
+    private boolean isThisWeek(java.time.LocalDateTime date) {
+        if (date == null)
+            return false;
+        java.time.LocalDate now = java.time.LocalDate.now();
+        java.time.temporal.WeekFields weekFields = java.time.temporal.WeekFields.of(java.util.Locale.getDefault());
+        int currentWeek = now.get(weekFields.weekOfWeekBasedYear());
+        int targetWeek = date.toLocalDate().get(weekFields.weekOfWeekBasedYear());
+        return currentWeek == targetWeek && now.getYear() == date.getYear();
     }
 }

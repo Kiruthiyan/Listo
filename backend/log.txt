@@ -1,0 +1,60 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------------< com.listo:api >----------------------------
+[INFO] Building api 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ api ---
+[INFO] Deleting C:\Users\kirut\Desktop\To\backend\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ api ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ api ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 40 source files with javac [debug release 21] to target\classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /C:/Users/kirut/Desktop/To/backend/src/main/java/com/listo/api/service/TaskService.java:[117,34] cannot find symbol
+  symbol:   method before(java.util.Date)
+  location: class java.time.LocalDateTime
+[ERROR] /C:/Users/kirut/Desktop/To/backend/src/main/java/com/listo/api/service/TaskService.java:[119,78] incompatible types: java.time.LocalDateTime cannot be converted to java.util.Date
+[ERROR] /C:/Users/kirut/Desktop/To/backend/src/main/java/com/listo/api/service/TaskService.java:[120,104] incompatible types: java.time.LocalDateTime cannot be converted to java.util.Date
+[ERROR] /C:/Users/kirut/Desktop/To/backend/src/main/java/com/listo/api/service/TaskService.java:[127,25] incompatible types: inference variable K has incompatible bounds
+    equality constraints: java.lang.String
+    lower bounds: com.listo.api.entity.TaskPriority
+[INFO] 4 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  57.606 s
+[INFO] Finished at: 2025-12-16T19:40:17+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project api: Compilation failure: Compilation failure: 
+[ERROR] /C:/Users/kirut/Desktop/To/backend/src/main/java/com/listo/api/service/TaskService.java:[117,34] cannot find symbol
+[ERROR]   symbol:   method before(java.util.Date)
+[ERROR]   location: class java.time.LocalDateTime
+[ERROR] /C:/Users/kirut/Desktop/To/backend/src/main/java/com/listo/api/service/TaskService.java:[119,78] incompatible types: java.time.LocalDateTime cannot be converted to java.util.Date
+[ERROR] /C:/Users/kirut/Desktop/To/backend/src/main/java/com/listo/api/service/TaskService.java:[120,104] incompatible types: java.time.LocalDateTime cannot be converted to java.util.Date
+[ERROR] /C:/Users/kirut/Desktop/To/backend/src/main/java/com/listo/api/service/TaskService.java:[127,25] incompatible types: inference variable K has incompatible bounds
+[ERROR]     equality constraints: java.lang.String
+[ERROR]     lower bounds: com.listo.api.entity.TaskPriority
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

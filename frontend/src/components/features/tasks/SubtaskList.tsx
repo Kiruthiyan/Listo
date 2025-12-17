@@ -136,7 +136,7 @@ export default function SubtaskList({ taskId, subtasks: initialSubtasks, onUpdat
                             </div>
                         ) : (
                             <>
-                                <span className={`text-sm flex-1 ${subtask.completed ? 'line-through text-muted-foreground' : ''}`}>
+                                <span className={`text-base flex-1 ${subtask.completed ? 'line-through text-muted-foreground' : ''}`}>
                                     {subtask.title}
                                 </span>
                                 <Button

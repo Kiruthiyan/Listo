@@ -1,32 +1,33 @@
 'use client';
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
-import { Bell, Moon, Sun, User, LogOut, Lock } from 'lucide-react';
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { useState, useEffect } from "react";
-import { ProfileForm } from "@/components/settings/ProfileForm";
-import { PasswordForm } from "@/components/settings/PasswordForm";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { User, Bell, Shield, Palette, Moon, Sun, LogOut, ChevronRight, Mail, Lock } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 export default function SettingsPage() {
     const router = useRouter();
-    const [notifications, setNotifications] = useState(true);
-    const [theme, setTheme] = useState('dark');
+    const [theme, setTheme] = useState<'light' | 'dark'>('light');
+    const [emailNotifications, setEmailNotifications] = useState(true);
+    const [pushNotifications, setPushNotifications] = useState(false);
 
     useEffect(() => {
-        // Initialize theme from localStorage or DOM
-        const isDark = document.documentElement.classList.contains('dark') || localStorage.getItem('theme') === 'dark';
-        setTheme(isDark ? 'dark' : 'light');
-        if (isDark) {
+        // Initialize theme
+        const stored = localStorage.getItem('theme');
+        if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            setTheme('dark');
             document.documentElement.classList.add('dark');
         } else {
-            document.documentElement.classList.remove('dark'); // Default to light if preferred
-            // Note: Our globals.css defaults to light if no class used, but we should be explicit if we use class strategy.
+            setTheme('light');
+            document.documentElement.classList.remove('dark');
         }
     }, []);
 
-    const handleThemeChange = (newTheme: string) => {
+    const toggleTheme = (newTheme: 'light' | 'dark') => {
         setTheme(newTheme);
         if (newTheme === 'dark') {
             document.documentElement.classList.add('dark');
@@ -39,109 +40,124 @@ export default function SettingsPage() {
 
     const handleLogout = () => {
         localStorage.removeItem('token');
-        router.push('/login');
+        localStorage.removeItem('user'); // Clean up user data if exists
         toast.success("Logged out successfully");
+        router.push('/login');
     };
 
     return (
-        <div className="space-y-8 max-w-4xl mx-auto pb-10">
+        <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 animate-in fade-in duration-500 pb-20 md:pb-0">
+            {/* Header */}
             <div>
-                <h2 className="text-3xl font-bold tracking-tight">Settings</h2>
-                <p className="text-muted-foreground">Manage your account and preferences.</p>
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Settings</h2>
+                <p className="text-xs md:text-base text-muted-foreground">Manage your account and preferences.</p>
             </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <User className="h-5 w-5" />
-                        Account
-                    </CardTitle>
-                    <CardDescription>Update your personal information.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <ProfileForm />
-                </CardContent>
-            </Card>
+            {/* Account Section */}
+            <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider px-1">Account</h3>
+                <Card className="border shadow-sm overflow-hidden">
+                    <div className="divide-y divide-border/50">
+                        {/* Profile Info */}
+                        <div className="p-4 flex items-center justify-between hover:bg-muted/30 transition-colors cursor-pointer">
+                            <div className="flex items-center gap-3">
+                                <div className="h-10 w-10 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center text-sky-600 dark:text-sky-400">
+                                    <User className="h-5 w-5" />
+                                </div>
+                                <div>
+                                    <p className="font-medium text-sm">Profile Information</p>
+                                    <p className="text-xs text-muted-foreground">Update your photo and details</p>
+                                </div>
+                            </div>
+                            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Lock className="h-5 w-5" />
-                        Security
-                    </CardTitle>
-                    <CardDescription>Manage your password.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <PasswordForm />
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Sun className="h-5 w-5" />
-                        Appearance
-                    </CardTitle>
-                    <CardDescription>Customize the look and feel.</CardDescription>
-                </CardHeader>
-                <CardContent className="flex items-center justify-between">
-                    <div className="space-y-1">
-                        <p className="text-sm font-medium">Theme</p>
-                        <p className="text-sm text-muted-foreground">Select your preferred theme.</p>
+                        {/* Password */}
+                        <div className="p-4 flex items-center justify-between hover:bg-muted/30 transition-colors cursor-pointer">
+                            <div className="flex items-center gap-3">
+                                <div className="h-10 w-10 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400">
+                                    <Lock className="h-5 w-5" />
+                                </div>
+                                <div>
+                                    <p className="font-medium text-sm">Security</p>
+                                    <p className="text-xs text-muted-foreground">Change password & 2FA</p>
+                                </div>
+                            </div>
+                            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        </div>
                     </div>
-                    <div className="flex gap-2 bg-secondary p-1 rounded-lg">
-                        <Button
-                            variant={theme === 'light' ? 'default' : 'ghost'}
-                            size="sm"
-                            onClick={() => handleThemeChange('light')}
-                            className={theme === 'light' ? 'bg-background text-foreground shadow-sm' : ''}
-                        >
-                            <Sun className="h-4 w-4 mr-2" /> Light
-                        </Button>
-                        <Button
-                            variant={theme === 'dark' ? 'default' : 'ghost'}
-                            size="sm"
-                            onClick={() => handleThemeChange('dark')}
-                            className={theme === 'dark' ? 'bg-background text-foreground shadow-sm' : ''}
-                        >
-                            <Moon className="h-4 w-4 mr-2" /> Dark
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
+                </Card>
+            </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Bell className="h-5 w-5" />
-                        Notifications
-                    </CardTitle>
-                    <CardDescription>Configure how you receive alerts.</CardDescription>
-                </CardHeader>
-                <CardContent className="flex items-center justify-between">
-                    <div className="space-y-1">
-                        <p className="text-sm font-medium">Push Notifications</p>
-                        <p className="text-sm text-muted-foreground">Receive updates about your tasks.</p>
-                    </div>
-                    <Button variant={notifications ? 'default' : 'outline'} onClick={() => setNotifications(!notifications)}>
-                        {notifications ? 'Enabled' : 'Disabled'}
-                    </Button>
-                </CardContent>
-            </Card>
+            {/* Appearance Section */}
+            <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider px-1">Appearance</h3>
+                <Card className="border shadow-sm">
+                    <CardContent className="p-4 py-3 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400">
+                                <Palette className="h-5 w-5" />
+                            </div>
+                            <div>
+                                <p className="font-medium text-sm">Theme</p>
+                                <p className="text-xs text-muted-foreground">Select app appearance</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center bg-secondary rounded-full p-1 border border-border/50">
+                            <button
+                                onClick={() => toggleTheme('light')}
+                                className={`p-1.5 rounded-full transition-all ${theme === 'light' ? 'bg-background shadow-sm text-sky-500' : 'text-muted-foreground'}`}
+                            >
+                                <Sun className="h-4 w-4" />
+                            </button>
+                            <button
+                                onClick={() => toggleTheme('dark')}
+                                className={`p-1.5 rounded-full transition-all ${theme === 'dark' ? 'bg-background shadow-sm text-sky-500' : 'text-muted-foreground'}`}
+                            >
+                                <Moon className="h-4 w-4" />
+                            </button>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
 
-            <Card className="border-destructive/20 bg-destructive/5">
-                <CardHeader>
-                    <CardTitle className="text-destructive flex items-center gap-2">
-                        <LogOut className="h-5 w-5" />
-                        Danger Zone
-                    </CardTitle>
-                    <CardDescription>Actions that cannot be undone.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Button variant="destructive" onClick={handleLogout}>Log Out</Button>
-                </CardContent>
-            </Card>
+            {/* Notifications Section */}
+            <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider px-1">Notifications</h3>
+                <Card className="border shadow-sm overflow-hidden">
+                    <div className="divide-y divide-border/50">
+                        <div className="p-4 py-3 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                                    <Mail className="h-5 w-5" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-sm font-medium">Email Updates</span>
+                                </div>
+                            </div>
+                            <Checkbox checked={emailNotifications} onCheckedChange={(c) => setEmailNotifications(!!c)} />
+                        </div>
+                        <div className="p-4 py-3 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="h-10 w-10 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center text-pink-600 dark:text-pink-400">
+                                    <Bell className="h-5 w-5" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-sm font-medium">Push Notifications</span>
+                                </div>
+                            </div>
+                            <Checkbox checked={pushNotifications} onCheckedChange={(c) => setPushNotifications(!!c)} />
+                        </div>
+                    </div>
+                </Card>
+            </div>
+
+            {/* Logout Button */}
+            <div className="pt-4">
+                <Button variant="destructive" className="w-full md:w-auto md:min-w-[200px] h-11 shadow-lg shadow-destructive/20 rounded-xl" onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" /> Sign Out
+                </Button>
+            </div>
         </div>
     );
 }
-

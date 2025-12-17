@@ -24,6 +24,11 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getAllTasks(authentication.getName()));
     }
 
+    @GetMapping("/stats")
+    public ResponseEntity<com.listo.api.dto.TaskStatisticsDTO> getTaskStatistics(Authentication authentication) {
+        return ResponseEntity.ok(taskService.getTaskStatistics(authentication.getName()));
+    }
+
     @PostMapping
     public ResponseEntity<TaskDTO> createTask(
             @RequestBody CreateTaskRequest request,

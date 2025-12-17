@@ -16,10 +16,6 @@
 - **Advanced Filtering**: Filter by Status, Priority (Low/Medium/High), and Due Date.
 - **Search**: Instant search across titles, descriptions, and subjects.
 
-### 🧩 **Subtask Management**
-- **Inline Editing**: Add and rename subtasks without leaving the main view.
-- **Progress Tracking**: Visual progress bars (0-100%) for every parent task.
-- **Optimistic UI**: Instant feedback on checks and updates.
 
 ### 🎨 **Premium UI/UX**
 - **Glassmorphism**: Modern, translucent UI elements.

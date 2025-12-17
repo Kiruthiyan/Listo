@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import api from '@/lib/axios';
+import { GraduationCap } from 'lucide-react';
 
 const signupSchema = z.object({
     fullName: z.string().min(2, "Name is too short"),
@@ -47,9 +48,12 @@ export function SignupForm() {
 
     return (
         <div className="w-full space-y-4">
-            <div className="text-center">
-                <h1 className="text-2xl font-bold tracking-tight">Create Account</h1>
-                <p className="text-sm text-muted-foreground">Join us today!</p>
+            <div className="text-center space-y-2">
+                <div className="mx-auto h-12 w-12 rounded-xl bg-gradient-to-br from-orange-400 to-pink-600 flex items-center justify-center shadow-lg shadow-orange-500/20">
+                    <GraduationCap className="h-6 w-6 text-white" />
+                </div>
+                <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-br from-foreground to-muted-foreground bg-clip-text text-transparent pb-1">Join Listo</h1>
+                <p className="text-sm text-muted-foreground">Start organizing your life today</p>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="space-y-2">

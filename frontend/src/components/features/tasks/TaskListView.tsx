@@ -1,39 +1,32 @@
 'use client';
 
-import { format, isPast, isToday } from 'date-fns';
-import { Calendar as CalendarIcon, MoreVertical, Edit, Trash2, ChevronDown, ChevronUp, BookOpen, AlertCircle, Pencil } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Task, SubTask } from '@/types/task';
+import { format, isPast } from 'date-fns';
+import { Calendar, Check, ChevronDown, ChevronRight, Clock, MoreVertical, Pencil, Trash2, AlertCircle, CalendarIcon, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import SubtaskList, { Subtask } from '@/components/features/tasks/SubtaskList';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
-
-// Reusing interface (should export from a types file optimally)
-interface Task {
-    id: string;
-    title: string;
-    description: string;
-    subject?: string;
-    status: 'TODO' | 'IN_PROGRESS' | 'DONE';
-    priority: 'HIGH' | 'MEDIUM' | 'LOW';
-    dueDate: string;
-    subtasks: Subtask[];
-}
+import SubtaskList from './SubtaskList';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface TaskListViewProps {
     tasks: Task[];
-    onEdit: (task: Task) => void;
-    onDelete: (id: string) => void;
     onUpdateStatus: (task: Task, status: 'TODO' | 'IN_PROGRESS' | 'DONE') => void;
+    onDelete: (taskId: number) => void;
+    onEdit: (task: Task) => void;
     onUpdate: () => void;
 }
 
-export default function TaskListView({ tasks, onEdit, onDelete, onUpdateStatus, onUpdate }: TaskListViewProps) {
-    const [expandedTasks, setExpandedTasks] = useState<Set<string>>(new Set());
+export default function TaskListView({ tasks, onUpdateStatus, onDelete, onEdit, onUpdate }: TaskListViewProps) {
+    const [expandedTasks, setExpandedTasks] = useState<Set<number>>(new Set());
 
-    const toggleExpand = (taskId: string) => {
+    const toggleExpand = (taskId: number) => {
         const newSet = new Set(expandedTasks);
         if (newSet.has(taskId)) newSet.delete(taskId);
         else newSet.add(taskId);
@@ -50,54 +43,41 @@ export default function TaskListView({ tasks, onEdit, onDelete, onUpdateStatus, 
     };
 
     return (
-        <div className="rounded-md border border-border/50 bg-card">
-            {/* Header */}
-            <div className="grid grid-cols-[auto_1fr_auto_auto_auto_auto] gap-4 p-3 border-b border-border/50 text-xs font-medium text-muted-foreground items-center px-4">
-                <div className="w-6"></div> {/* Expand Icon */}
+        <div className="bg-card">
+            {/* Desktop Header */}
+            <div className="hidden md:grid grid-cols-[30px_1fr_120px_130px_100px_140px] gap-4 p-4 border-b border-border/50 text-sm font-semibold text-muted-foreground items-center bg-secondary/10 rounded-t-md">
+                <div className="w-6"></div>
                 <div>Title</div>
-                <div className="hidden sm:block">Subject</div>
-                <div className="hidden sm:block">Status</div>
-                <div className="hidden md:block">Priority</div>
+                <div>Subject</div>
+                <div>Status</div>
+                <div>Priority</div>
                 <div>Due Date</div>
             </div>
 
-            {/* Rows */}
+            {/* List Container */}
             <div className="divide-y divide-border/50">
                 {tasks.map((task) => (
-                    <div key={task.id} className="group bg-card transition-colors hover:bg-accent/30">
-                        <div className="grid grid-cols-[auto_1fr_auto_auto_auto_auto] gap-4 p-3 items-center px-4 cursor-pointer" onClick={() => toggleExpand(task.id)}>
+                    <div key={task.id} className="group transition-colors hover:bg-muted/30">
 
-                            {/* Expand Toggle */}
-                            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); toggleExpand(task.id); }}>
-                                {expandedTasks.has(task.id) ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                            </Button>
+                        {/* DESKTOP ROW */}
+                        <div className="hidden md:grid grid-cols-[30px_1fr_120px_130px_100px_140px] gap-4 p-4 items-center" onClick={() => toggleExpand(task.id)}>
+                            <button onClick={(e) => { e.stopPropagation(); toggleExpand(task.id); }} className="text-muted-foreground hover:text-foreground">
+                                {expandedTasks.has(task.id) ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                            </button>
 
-                            {/* Title */}
-                            <div className="min-w-0">
-                                <span className={`font-medium text-sm block truncate ${task.status === 'DONE' ? 'line-through text-muted-foreground' : ''}`}>
-                                    {task.title}
-                                </span>
-                                {task.subtasks?.length > 0 && (
-                                    <span className="text-[10px] text-muted-foreground flex items-center gap-1 mt-0.5">
-                                        <div className="h-1 w-1 rounded-full bg-primary/50" />
-                                        {task.subtasks.filter(s => s.completed).length}/{task.subtasks.length} subtasks
-                                    </span>
-                                )}
-                            </div>
+                            <div className="font-medium text-sm text-foreground truncate">{task.title}</div>
 
-                            {/* Subject */}
-                            <div className="hidden sm:block">
+                            <div>
                                 {task.subject ? (
-                                    <Badge variant="outline" className="font-normal text-[10px] bg-secondary/30">
+                                    <Badge variant="outline" className="text-xs font-normal text-muted-foreground bg-secondary/20 border-secondary-foreground/20">
                                         {task.subject}
                                     </Badge>
-                                ) : <span className="text-muted-foreground text-[10px]">-</span>}
+                                ) : <span className="text-muted-foreground text-xs">-</span>}
                             </div>
 
-                            {/* Status */}
-                            <div className="hidden sm:block" onClick={(e) => e.stopPropagation()}>
+                            <div onClick={(e) => e.stopPropagation()}>
                                 <Select defaultValue={task.status} onValueChange={(v) => onUpdateStatus(task, v as any)}>
-                                    <SelectTrigger className="h-6 text-[10px] w-[100px] border-border/50 bg-secondary/20">
+                                    <SelectTrigger className="h-8 w-[110px] text-xs">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -108,35 +88,75 @@ export default function TaskListView({ tasks, onEdit, onDelete, onUpdateStatus, 
                                 </Select>
                             </div>
 
-                            {/* Priority */}
-                            <div className="hidden md:block">
-                                <Badge variant="secondary" className={`text-[10px] px-1.5 h-5 ${getPriorityColor(task.priority)}`}>
+                            <div>
+                                <Badge variant="secondary" className={`text-xs px-2 py-0.5 ${getPriorityColor(task.priority)} border-0`}>
                                     {task.priority}
                                 </Badge>
                             </div>
 
-                            {/* Due Date & Actions */}
-                            <div className="flex items-center gap-4 justify-end min-w-[120px]">
+                            <div className="text-sm text-muted-foreground flex items-center gap-2">
                                 {task.dueDate && (
-                                    <span className={`text-xs flex items-center gap-1 ${isPast(new Date(task.dueDate)) && !isToday(new Date(task.dueDate)) && task.status !== 'DONE' ? 'text-destructive font-medium' : 'text-muted-foreground'}`}>
-                                        {format(new Date(task.dueDate), "MMM d")}
-                                    </span>
+                                    <>
+                                        <Calendar className="h-3 w-3" />
+                                        <span className={isPast(new Date(task.dueDate)) ? 'text-destructive' : ''}>
+                                            {format(new Date(task.dueDate), 'MMM d')}
+                                        </span>
+                                    </>
                                 )}
+                            </div>
+                        </div>
 
-                                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <Button variant="ghost" size="icon" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); onEdit(task); }}>
-                                        <Pencil className="h-3 w-3" />
-                                    </Button>
-                                    <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive" onClick={(e) => { e.stopPropagation(); onDelete(task.id); }}>
-                                        <Trash2 className="h-3 w-3" />
-                                    </Button>
+                        {/* MOBILE FEED CARD */}
+                        <div className="md:hidden group relative bg-card/80 backdrop-blur-sm p-4 rounded-xl border-b border-border/50 hover:bg-muted/50 transition-all active:scale-[0.99]" onClick={() => toggleExpand(task.id)}>
+                            <div className="flex items-start justify-between gap-3">
+                                {/* Left: Priority Indicator */}
+                                <div className={`h-10 w-10 flex-shrink-0 rounded-full flex items-center justify-center ${task.priority === 'HIGH' ? 'bg-red-100 text-red-600' :
+                                        task.priority === 'MEDIUM' ? 'bg-amber-100 text-amber-600' : 'bg-blue-100 text-blue-600'
+                                    }`}>
+                                    <div className={`h-3 w-3 rounded-full ${task.priority === 'HIGH' ? 'bg-red-500' :
+                                            task.priority === 'MEDIUM' ? 'bg-amber-500' : 'bg-blue-500'
+                                        }`} />
+                                </div>
+
+                                {/* Center: Content */}
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between mb-1">
+                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{task.subject || 'General'}</p>
+                                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${task.status === 'DONE' ? 'bg-green-100 text-green-700' :
+                                                task.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-700' :
+                                                    'bg-slate-100 text-slate-600'
+                                            }`}>
+                                            {task.status === 'DONE' ? 'Completed' : task.status === 'IN_PROGRESS' ? 'In Progress' : 'To Do'}
+                                        </span>
+                                    </div>
+                                    <h3 className={`text-base font-semibold leading-tight mb-1 text-foreground ${task.status === 'DONE' ? 'line-through opacity-70' : ''}`}>
+                                        {task.title}
+                                    </h3>
+
+                                    <div className="flex items-center gap-3 text-xs text-muted-foreground mt-2">
+                                        {task.dueDate && (
+                                            <div className="flex items-center gap-1">
+                                                <Calendar className="h-3 w-3" />
+                                                <span>{format(new Date(task.dueDate), 'MMM d')}</span>
+                                            </div>
+                                        )}
+                                        {task.subtasks?.length > 0 && (
+                                            <div className="flex items-center gap-1">
+                                                <div className="h-1.5 w-1.5 rounded-full bg-primary/40" />
+                                                <span>{task.subtasks.filter(s => s.completed).length}/{task.subtasks.length}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div onClick={(e) => { e.stopPropagation(); onEdit(task); }}>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground"><Pencil className="h-4 w-4" /></Button>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Expanded Content (Subtasks) */}
+                        {/* Expanded Subtasks */}
                         {expandedTasks.has(task.id) && (
-                            <div className="bg-secondary/5 px-4 pb-4 pt-0 pl-12 border-t border-border/30">
+                            <div className="bg-secondary/5 px-4 pb-4 pt-0 md:pl-14 border-t border-border/30">
                                 <SubtaskList taskId={task.id} subtasks={task.subtasks} onUpdate={onUpdate} />
                             </div>
                         )}

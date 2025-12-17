@@ -31,6 +31,11 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
 
+  --color-info: hsl(var(--info));
+  --color-info-foreground: hsl(var(--info-foreground));
+
+  --color-text-body: hsl(var(--text-body));
+
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius);
   --radius-lg: var(--radius-lg);
@@ -47,12 +52,16 @@
     /* Brand - Sky Blue Premium */
     --primary: 199 89% 48%;
     --primary-hover: 199 89% 42%;
-    --primary-soft: 199 89% 96%;
+    --primary-soft: 199 89% 92%;
     --primary-foreground: 0 0% 100%;
 
-    /* Text */
+    /* Tweak 3: Info Separation */
+    --info: 204 80% 90%;
+    --info-foreground: 199 89% 40%;
+
+    /* Text Hierarchy */
     --foreground: 222 47% 11%;
-    /* Slate-900 */
+    --text-body: 222 22% 25%;
     --muted-foreground: 215 16% 47%;
 
     /* Surfaces */
@@ -64,11 +73,9 @@
     --popover-foreground: 222 47% 11%;
 
     --secondary: 210 40% 96%;
-    /* Slate-100 */
     --secondary-foreground: 222 47% 11%;
 
     --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
 
     --accent: 210 40% 96%;
     --accent-foreground: 222 47% 11%;
@@ -80,7 +87,14 @@
     /* Borders */
     --border: 214 32% 91%;
     --input: 214 32% 91%;
+
+    /* Focus Ring - Soft Glow */
     --ring: 199 89% 48%;
+
+    /* Calendar Tokens */
+    --calendar-today: 199 89% 96%;
+    --calendar-event: 199 89% 48%;
+    --calendar-event-muted: 199 60% 72%;
 
     /* Radius */
     --radius-sm: 0.375rem;
@@ -90,45 +104,58 @@
 
     /* Shadows */
     --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.08);
   }
 
   .dark {
-    /* Dark Mode - Consistent with Light Mode Brand but Dark Surfaces */
-    --background: 222 47% 6%;
+    /* Premium Midnight Ocean (Sky Blue Base) Theme */
+    /* Background: Deep Rich Navy/Black (Not Grey) */
+    --background: 224 71% 4%;
     --foreground: 210 40% 98%;
 
-    --card: 222 47% 10%;
+    /* Cards: Slightly Lighter Navy */
+    --card: 224 71% 6%;
     --card-foreground: 210 40% 98%;
-    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
-    /* Darker shadow for dark mode */
-    --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.5);
 
-    --popover: 222 47% 10%;
+    --popover: 224 71% 6%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 199 89% 48%;
-    /* Keep Brand Color */
-    --primary-hover: 199 89% 42%;
-    --primary-soft: 199 89% 15%;
-    /* Darker soft for dark mode */
+    /* Primary: Bright Sky Blue Pop */
+    --primary: 199 89% 60%;
     --primary-foreground: 0 0% 100%;
+    --primary-hover: 199 89% 50%;
+    --primary-soft: 199 89% 10%;
 
-    --secondary: 217.2 32.6% 17.5%;
+    /* Secondary: Deep Blue Surface */
+    --secondary: 217 33% 15%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 217 33% 15%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
+    --accent: 217 33% 15%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 199 89% 48%;
+    /* Borders: Subtle Navy/Blue */
+    --border: 217 33% 15%;
+    --input: 217 33% 15%;
+    --ring: 199 89% 60%;
+
+    --info: 199 89% 25%;
+    --info-foreground: 199 89% 95%;
+
+    --text-body: 217 20% 80%;
+
+    --calendar-today: 199 89% 10%;
+    --calendar-event: 199 89% 60%;
+    --calendar-event-muted: 199 60% 25%;
+
+    /* Shadows: Deep Blue Glow */
+    --shadow-card: 0 1px 2px rgba(2, 6, 23, 0.5);
+    --shadow-hover: 0 8px 30px rgba(2, 6, 23, 0.7);
   }
 }
 
@@ -138,6 +165,15 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
   }
+}
+
+@utility text-heading {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+}
+
+@utility text-body {
+  color: hsl(var(--text-body));
 }
