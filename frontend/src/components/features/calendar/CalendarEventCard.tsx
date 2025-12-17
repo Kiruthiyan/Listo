@@ -5,7 +5,7 @@ import { Clock } from "lucide-react";
 
 interface CalendarEventCardProps {
     task: any;
-    onClick?: () => void;
+    onClick?: (e?: React.MouseEvent) => void;
     compact?: boolean; // For Month View (very small)
 }
 
