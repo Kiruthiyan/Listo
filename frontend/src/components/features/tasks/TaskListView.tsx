@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 interface TaskListViewProps {
     tasks: Task[];
     onUpdateStatus: (task: Task, status: 'TODO' | 'IN_PROGRESS' | 'DONE') => void;
-    onDelete: (taskId: number) => void;
+    onDelete: (taskId: string) => void;
     onEdit: (task: Task) => void;
     onUpdate: () => void;
 }
@@ -111,10 +111,10 @@ export default function TaskListView({ tasks, onUpdateStatus, onDelete, onEdit, 
                             <div className="flex items-start justify-between gap-3">
                                 {/* Left: Priority Indicator */}
                                 <div className={`h-10 w-10 flex-shrink-0 rounded-full flex items-center justify-center ${task.priority === 'HIGH' ? 'bg-red-100 text-red-600' :
-                                        task.priority === 'MEDIUM' ? 'bg-amber-100 text-amber-600' : 'bg-blue-100 text-blue-600'
+                                    task.priority === 'MEDIUM' ? 'bg-amber-100 text-amber-600' : 'bg-blue-100 text-blue-600'
                                     }`}>
                                     <div className={`h-3 w-3 rounded-full ${task.priority === 'HIGH' ? 'bg-red-500' :
-                                            task.priority === 'MEDIUM' ? 'bg-amber-500' : 'bg-blue-500'
+                                        task.priority === 'MEDIUM' ? 'bg-amber-500' : 'bg-blue-500'
                                         }`} />
                                 </div>
 
@@ -123,8 +123,8 @@ export default function TaskListView({ tasks, onUpdateStatus, onDelete, onEdit, 
                                     <div className="flex items-center justify-between mb-1">
                                         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{task.subject || 'General'}</p>
                                         <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${task.status === 'DONE' ? 'bg-green-100 text-green-700' :
-                                                task.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-700' :
-                                                    'bg-slate-100 text-slate-600'
+                                            task.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-700' :
+                                                'bg-slate-100 text-slate-600'
                                             }`}>
                                             {task.status === 'DONE' ? 'Completed' : task.status === 'IN_PROGRESS' ? 'In Progress' : 'To Do'}
                                         </span>
@@ -143,7 +143,7 @@ export default function TaskListView({ tasks, onUpdateStatus, onDelete, onEdit, 
                                         {task.subtasks?.length > 0 && (
                                             <div className="flex items-center gap-1">
                                                 <div className="h-1.5 w-1.5 rounded-full bg-primary/40" />
-                                                <span>{task.subtasks.filter(s => s.completed).length}/{task.subtasks.length}</span>
+                                                <span>{task.subtasks.filter((s: SubTask) => s.completed).length}/{task.subtasks.length}</span>
                                             </div>
                                         )}
                                     </div>
