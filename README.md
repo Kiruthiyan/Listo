@@ -96,9 +96,9 @@ npm run dev
 - [x] Task CRUD & Search
 - [x] Subtasks logic
 - [x] Professional Views (List/Grid)
-- [ ] Drag & Drop Kanban
-- [ ] Calendar View
-- [ ] User Profile Settings
+- [x] Drag & Drop Kanban
+- [x] Calendar View
+- [x] User Profile Settings
 
 ---
-*Built with ❤️ by Listo Team.*
+
